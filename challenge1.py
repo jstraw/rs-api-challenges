@@ -20,9 +20,12 @@ base_name = raw_input('What is the Base Name for the servers? ')
 
 print "Building Servers..."
 servers = []
+passlist = {}
 for x in range(number_of_servers):
     sname = "%s%02d" % (base_name, x+1) 
-    servers.append(cs.servers.create(sname, image.id, flava))
+    s = cs.servers.create(sname, image.id, flava)
+    servers.append(s)
+    passlist[s.name] = s.adminPass
     print "Boot issued for", sname
 
 servers_online = False
@@ -41,7 +44,6 @@ while not servers_online:
         servers_online = True
 
 for x in check:
-    import pdb; pdb.set_trace()
-    print '%s (%s) -- %s -- IP: %s' % \
-            (x.name, x.id, x.status, x.networks['public'][0])
+    print '%s (%s) -- %s -- IP: %s -- password: %s' % \
+            (x.name, x.id, x.status, x.networks['public'][0], passlist[x.name])
 
